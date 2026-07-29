@@ -17,7 +17,7 @@
   "dependencies": {
     "@opentui/core": "0.4.5",
     "@opentui/react": "0.4.5",
-    "close-with-grace": "2.2.0",
+    "close-with-grace": "2.5.0",
     "pino": "9.7.0",
     "react": "19.2.0",
     "react-devtools-core": "7.0.1",
