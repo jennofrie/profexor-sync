@@ -9,3 +9,7 @@ updates:
         patterns:
           - "@opentui/*"
           - "react"
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
