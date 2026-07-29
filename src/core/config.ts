@@ -1,6 +1,6 @@
-import { readFile } from "node:fs/promises";
-import { dirname } from "node:path";
-import { mkdir } from "node:fs/promises";
+import { chmod, mkdir, readFile } from "node:fs/promises";
+import { homedir } from "node:os";
+import { dirname, join } from "node:path";
 import YAML from "yaml";
 import { z } from "zod";
 import { ProfexorError } from "./errors.ts";
@@ -86,6 +86,7 @@ export async function loadConfig(path: string): Promise<AppConfig> {
 
 export async function writeDefaultConfig(path: string): Promise<void> {
   await mkdir(dirname(path), { recursive: true, mode: 0o700 });
+  const githubRoot = join(homedir(), "Desktop", "Github");
   const content = `schemaVersion: 1
 identity:
   name: Profexor
@@ -102,7 +103,7 @@ advisor:
 projects:
   - id: fexor-code
     label: Fexor Code
-    path: /home/myserver/Desktop/Github/fexor-code
+    path: ${JSON.stringify(join(githubRoot, "fexor-code"))}
     localBranch: main
     source:
       remote: origin
@@ -121,7 +122,7 @@ projects:
         timeoutSeconds: 1200
   - id: grok-build
     label: Grok Build
-    path: /home/myserver/Desktop/Github/grok-build
+    path: ${JSON.stringify(join(githubRoot, "grok-build"))}
     localBranch: main
     source:
       remote: upstream
@@ -140,6 +141,7 @@ projects:
         timeoutSeconds: 5400
 `;
   await Bun.write(path, content);
+  await chmod(path, 0o600);
 }
 
 export function findProject(config: AppConfig, id: string) {

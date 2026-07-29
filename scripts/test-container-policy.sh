@@ -14,9 +14,10 @@ output="$(
     --memory=512m \
     --cpus=1 \
     --tmpfs=/tmp:rw,noexec,nosuid,nodev,size=64m \
+    --env "HOST_CREDENTIAL_PATH=$HOME/.config/gh/hosts.yml" \
     "$image" \
     bun -e '
-      const homeVisible = await Bun.file("/home/myserver/.config/gh/hosts.yml").exists();
+      const homeVisible = await Bun.file(process.env.HOST_CREDENTIAL_PATH ?? "").exists();
       let networkBlocked = false;
       try {
         await fetch("https://example.com", { signal: AbortSignal.timeout(1500) });

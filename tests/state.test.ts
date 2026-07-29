@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, test } from "bun:test";
+import { stat } from "node:fs/promises";
 import { StateStore } from "../src/core/state.ts";
 import { EventLevel } from "../src/core/types.ts";
 import { removeTemporaryRoot, temporaryRoot, testPaths } from "./test-utils.ts";
@@ -30,6 +31,8 @@ describe("durable state", () => {
     expect(state.getObservation("demo")?.sourceSha).toBe("a".repeat(40));
     expect(state.listEvents()).toHaveLength(1);
     expect(state.listEvents()[0]?.details).toEqual({ token: "[redacted]" });
+    expect((await stat(testPaths(root).databaseFile)).mode & 0o777).toBe(0o600);
+    expect((await stat(testPaths(root).auditFile)).mode & 0o777).toBe(0o600);
     state.close();
   });
 });

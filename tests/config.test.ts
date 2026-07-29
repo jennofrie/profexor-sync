@@ -1,4 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test";
+import { stat } from "node:fs/promises";
+import { homedir } from "node:os";
+import { join } from "node:path";
 import { loadConfig, writeDefaultConfig } from "../src/core/config.ts";
 import { removeTemporaryRoot, temporaryRoot, testPaths } from "./test-utils.ts";
 
@@ -22,5 +25,9 @@ describe("configuration", () => {
       "grok-build",
     ]);
     expect(config.advisor.enabled).toBe(false);
+    expect(config.projects[0]?.path).toBe(
+      join(homedir(), "Desktop", "Github", "fexor-code"),
+    );
+    expect((await stat(paths.configFile)).mode & 0o777).toBe(0o600);
   });
 });

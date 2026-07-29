@@ -1,5 +1,6 @@
 import { mkdir, unlink, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { homedir } from "node:os";
+import { dirname, join } from "node:path";
 import { ProfexorError } from "./errors.ts";
 import { runCommand } from "./process.ts";
 import type { AppPaths } from "./paths.ts";
@@ -17,6 +18,16 @@ function unitQuote(value: string): string {
   return `"${value.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
 }
 
+function unitPath(value: string): string {
+  if (!/^\/[A-Za-z0-9._/-]+$/.test(value)) {
+    throw new ProfexorError(
+      "SECURITY_POLICY",
+      "Systemd paths must be absolute and contain only safe path characters",
+    );
+  }
+  return value;
+}
+
 function shellQuote(value: string): string {
   if (value.includes("\0") || value.includes("\n") || value.includes("\r")) {
     throw new ProfexorError("SECURITY_POLICY", "Unsafe control character in launcher path");
@@ -29,37 +40,42 @@ export async function installUserService(
   paths: AppPaths,
   intervalMinutes: number,
 ): Promise<void> {
-  const bunPath = Bun.which("bun");
+  const bunPath = Bun.which("bun") ?? process.execPath;
   if (!bunPath) {
     throw new ProfexorError("PROJECT_INVALID", "Bun is not available");
   }
   const unitDir = systemdDir();
   await mkdir(unitDir, { recursive: true, mode: 0o700 });
   const cli = join(projectRoot, "src", "cli.tsx");
+  const userHome = homedir();
+  const servicePath = [
+    dirname(bunPath),
+    join(userHome, ".local", "bin"),
+    "/usr/local/bin",
+    "/usr/bin",
+    "/bin",
+  ].join(":");
   const service = `[Unit]
 Description=Profexor Sync remote monitor
 Documentation=https://github.com/jennofrie/profexor-sync
 
 [Service]
 Type=oneshot
-WorkingDirectory=${unitQuote(projectRoot)}
+WorkingDirectory=${unitPath(projectRoot)}
 ExecStart=${unitQuote(bunPath)} ${unitQuote(cli)} --config ${unitQuote(paths.configFile)} check --all --json
-Environment=${unitQuote("PATH=/home/myserver/.bun/bin:/home/myserver/.local/bin:/usr/local/bin:/usr/bin:/bin")}
+Environment=${unitQuote(`PATH=${servicePath}`)}
 UMask=0077
 NoNewPrivileges=yes
 PrivateTmp=yes
-PrivateDevices=yes
 ProtectSystem=strict
 ProtectHome=read-only
-ReadWritePaths=${unitQuote(paths.stateDir)}
-ReadWritePaths=${unitQuote(paths.cacheDir)}
+ReadWritePaths=${unitPath(paths.stateDir)}
+ReadWritePaths=${unitPath(paths.cacheDir)}
 RestrictSUIDSGID=yes
 LockPersonality=yes
 ProtectKernelTunables=yes
-ProtectKernelModules=yes
 ProtectControlGroups=yes
 RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
-CapabilityBoundingSet=
 
 [Install]
 WantedBy=default.target
@@ -140,7 +156,7 @@ export async function ensureLauncher(projectRoot: string): Promise<string> {
   const binDir = join(process.env.HOME ?? "", ".local", "bin");
   await mkdir(binDir, { recursive: true, mode: 0o755 });
   const launcherPath = join(binDir, "profsync");
-  const bunPath = Bun.which("bun");
+  const bunPath = Bun.which("bun") ?? process.execPath;
   if (!bunPath) {
     throw new ProfexorError("PROJECT_INVALID", "Bun is not available");
   }

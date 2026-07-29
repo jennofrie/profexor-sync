@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite";
-import { appendFile, mkdir } from "node:fs/promises";
+import { appendFile, chmod, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import pino, { type Logger } from "pino";
 import { redactValue } from "./redaction.ts";
@@ -169,6 +169,10 @@ export class StateStore {
       },
       pino.destination({ dest: paths.auditFile, mkdir: true, sync: true }),
     );
+    await Promise.all([
+      chmod(paths.databaseFile, 0o600),
+      chmod(paths.auditFile, 0o600),
+    ]);
     return new StateStore(paths, database, logger);
   }
 

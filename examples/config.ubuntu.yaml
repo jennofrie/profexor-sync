@@ -14,7 +14,7 @@ advisor:
 projects:
   - id: fexor-code
     label: Fexor Code
-    path: /home/myserver/Desktop/Github/fexor-code
+    path: /home/your-user/Desktop/Github/fexor-code
     localBranch: main
     source: { remote: origin, branch: main }
     destination: { remote: origin, branch: main }
@@ -25,7 +25,7 @@ projects:
       resources: { cpus: 4, memory: 8g, pids: 512, timeoutSeconds: 1200 }
   - id: grok-build
     label: Grok Build
-    path: /home/myserver/Desktop/Github/grok-build
+    path: /home/your-user/Desktop/Github/grok-build
     localBranch: main
     source: { remote: upstream, branch: main }
     destination: { remote: origin, branch: main }

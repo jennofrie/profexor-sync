@@ -84,6 +84,9 @@ function uniqueHeads(heads: MergeHead[]): MergeHead[] {
 }
 
 async function commandExists(command: string): Promise<boolean> {
+  if (command === "bun" && process.versions.bun) {
+    return true;
+  }
   return Bun.which(command) !== null;
 }
 

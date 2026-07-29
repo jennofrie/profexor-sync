@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-github_root="/home/myserver/Desktop/Github"
+github_root="${HOME:?HOME must be set}/Desktop/Github"
 fexor_path="$github_root/fexor-code"
 grok_path="$github_root/grok-build"
 

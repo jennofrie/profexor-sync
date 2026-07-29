@@ -13,7 +13,7 @@ bun install --frozen-lockfile
 bun run ./src/cli.tsx init
 
 if ! command -v mergiraf >/dev/null 2>&1; then
-  cargo install --locked mergiraf
+  cargo install --locked --version 0.18.0 mergiraf
 fi
 
 "$project_root/scripts/bootstrap-projects.sh"

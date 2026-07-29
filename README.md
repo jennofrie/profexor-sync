@@ -52,7 +52,7 @@ Requirements are Bun 1.3.14+, Git, GitHub CLI authentication, Docker, Rust/Cargo
 and user-level systemd.
 
 ```bash
-cd /home/myserver/Desktop/Profexor-Sync
+cd ~/Desktop/Profexor-Sync
 ./scripts/install-ubuntu.sh
 ```
 
