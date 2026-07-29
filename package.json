@@ -1,0 +1,46 @@
+{
+  "name": "profexor-sync",
+  "version": "0.1.0",
+  "description": "A review-first GitHub upstream synchronizer for maintained repositories.",
+  "type": "module",
+  "bin": {
+    "profsync": "./src/cli.tsx"
+  },
+  "scripts": {
+    "start": "bun run ./src/cli.tsx",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "check": "bun run typecheck && bun test",
+    "doctor": "bun run ./src/cli.tsx doctor"
+  },
+  "dependencies": {
+    "@opentui/core": "0.4.5",
+    "@opentui/react": "0.4.5",
+    "close-with-grace": "2.2.0",
+    "pino": "9.7.0",
+    "react": "19.2.0",
+    "react-devtools-core": "7.0.1",
+    "ws": "8.21.1",
+    "yaml": "2.8.3",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.5",
+    "@types/react": "19.2.2",
+    "@types/ws": "8.18.1",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "bun": ">=1.3.14"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "sync",
+    "tui",
+    "opentui"
+  ],
+  "license": "MIT",
+  "author": "Profexor"
+}

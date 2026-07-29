@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jennofrie/profexor-sync/schemas/advisor-response.schema.json",
+  "title": "Profexor Sync Advisor Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["summary", "risks", "patches"],
+  "properties": {
+    "summary": { "type": "string", "maxLength": 20000 },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "message", "paths"],
+        "properties": {
+          "severity": { "enum": ["low", "medium", "high"] },
+          "message": { "type": "string" },
+          "paths": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "patches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "unifiedDiff", "rationale", "confidence"],
+        "properties": {
+          "path": { "type": "string" },
+          "unifiedDiff": { "type": "string" },
+          "rationale": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    }
+  }
+}

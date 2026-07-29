@@ -1,0 +1,13 @@
+node_modules/
+bun.lockb
+dist/
+coverage/
+.DS_Store
+.env
+.env.*
+!.env.schema
+*.log
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.profexor-sync/

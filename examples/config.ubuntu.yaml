@@ -1,0 +1,36 @@
+schemaVersion: 1
+identity:
+  name: Profexor
+  email: 58376175+jennofrie@users.noreply.github.com
+  githubLogin: jennofrie
+monitor:
+  intervalMinutes: 15
+advisor:
+  enabled: false
+  command: []
+  timeoutSeconds: 120
+  maxInputBytes: 200000
+  allowedEnvironment: []
+projects:
+  - id: fexor-code
+    label: Fexor Code
+    path: /home/myserver/Desktop/Github/fexor-code
+    localBranch: main
+    source: { remote: origin, branch: main }
+    destination: { remote: origin, branch: main }
+    validator:
+      kind: fexor
+      image: profexor-sync/bun-validator:1.3.14
+      cacheVolume: profexor-sync-bun-cache
+      resources: { cpus: 4, memory: 8g, pids: 512, timeoutSeconds: 1200 }
+  - id: grok-build
+    label: Grok Build
+    path: /home/myserver/Desktop/Github/grok-build
+    localBranch: main
+    source: { remote: upstream, branch: main }
+    destination: { remote: origin, branch: main }
+    validator:
+      kind: grok
+      image: profexor-sync/rust-validator:1.92
+      cacheVolume: profexor-sync-cargo-cache
+      resources: { cpus: 8, memory: 32g, pids: 2048, timeoutSeconds: 5400 }

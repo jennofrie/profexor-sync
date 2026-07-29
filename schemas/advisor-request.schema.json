@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jennofrie/profexor-sync/schemas/advisor-request.schema.json",
+  "title": "Profexor Sync Advisor Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "task", "project", "runId", "refs", "commits", "risks", "conflicts"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "task": { "enum": ["summarize", "resolve-conflicts"] },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" }
+      }
+    },
+    "runId": { "type": "string" },
+    "refs": {
+      "type": "object",
+      "required": ["local", "destination", "source", "candidate"],
+      "properties": {
+        "local": { "type": "string" },
+        "destination": { "type": "string" },
+        "source": { "type": "string" },
+        "candidate": { "type": ["string", "null"] }
+      }
+    },
+    "commits": { "type": "array" },
+    "risks": { "type": "array" },
+    "conflicts": { "type": "array" }
+  }
+}
